@@ -283,7 +283,6 @@ def main():
         ],
         "interventions": [
             {"method": "noop", "params": {}},
-            {
             "method": "subtraction",
             "params": {
                 "type": "mlp_w_out",

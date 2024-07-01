@@ -80,11 +80,12 @@ def convert(orig_state_dict, cfg):
     return state_dict
 
 
-def load_hooked(model_name, weights_path):
+def load_hooked(model_name, weights_path, device="cpu"):
     _model = HookedTransformer.from_pretrained(model_name)
+    _model.cfg.device = device
     cfg = _model.cfg
 
-    _weights = torch.load(weights_path, map_location=torch.device("cuda"))[
+    _weights = torch.load(weights_path, map_location=device)[
         "state"
     ]
     weights = convert(_weights, cfg)

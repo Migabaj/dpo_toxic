@@ -1,5 +1,5 @@
 """
-Module Doc String
+Neuron Figure.
 """
 
 import os

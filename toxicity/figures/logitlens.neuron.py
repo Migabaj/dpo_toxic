@@ -55,16 +55,13 @@ def get_token_prob_for_layer(model, batch, token_id, layer=0):
 
     return token_probs
 
-if __name__ == "__main__":
-    model = load_hooked("gpt2-medium", os.path.join(MODEL_DIR, "dpo.pt"))
-    model.tokenizer.padding_side = "left"
-    model.tokenizer.pad_token_id = model.tokenizer.eos_token_id
-
+def prompts_to_tokens(model, prompts_path):
     prompts = list(
-        np.load(os.path.join(ROOT_DIR, "toxicity/figures/shit_prompts.npy"))
+        np.load(os.path.join(prompts_path))
     )
     tokens = model.to_tokens(prompts, prepend_bos=True)
-    batchsize = 4
+
+    return tokens
     all_dpo_prob = None
     for idx in tqdm(range(0, tokens.shape[0], batchsize)):
         batch = tokens[idx : idx + batchsize].cuda()

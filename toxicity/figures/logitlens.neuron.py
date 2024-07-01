@@ -61,6 +61,13 @@ def get_token_prob_for_layer(model, batch, token_id, layer=0, device=None, verbo
     return token_probs
 
 def prompts_to_tokens(model, prompts_path):
+    """
+    Open prompt path and convert to tokens.
+
+    :param model HookedTransformer: Model to convert to tokens.
+    :param prompts_path str: Path to prompts.
+    :returns tokens torch.Tensor: Resulting tokens.
+    """
     prompts = list(
         np.load(os.path.join(prompts_path))
     )
@@ -69,7 +76,13 @@ def prompts_to_tokens(model, prompts_path):
     return tokens
 
 def load_model_with_device(model_name, weights_path=None, device="cpu"):
-    # Load and configure model.
+    """
+    Load and configure model.
+    :param model_name str: Model HuggingFace index.
+    :param weights_path Union[NoneType, str]: Path to model weights.
+    :param device str: Device.
+    :return model HookedTransformer: Resulting model.
+    """
     model = load_hooked(model_name, weights_path, device=device)
     model.tokenizer.padding_side = "left"
     model.tokenizer.pad_token_id = model.tokenizer.eos_token_id

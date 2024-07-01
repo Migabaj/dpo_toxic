@@ -18,15 +18,11 @@ from constants import ROOT_DIR, MODEL_DIR, DEVICE
 
 from transformer_lens.utils import Slice
 
-# TODO: remove if needed
-# torch.set_default_device('cpu')
-
-
-# Loading and setting up hooked model
-
-# with open(CONFIG_DIR, "r") as f:
-#     cfg = yaml.safe_load(f)
-
+BATCHSIZE = 4
+DPO_DIR = os.path.join(MODEL_DIR, "dpo.pt")
+PROMPT_PATH = os.path.join(ROOT_DIR, "toxicity/figures/shit_prompts.npy")
+DEVICE = "cuda"
+TOKEN_ID = 7510 # "shit" token
 
 
 def get_token_prob_for_layer(model, batch, token_id, layer=0):

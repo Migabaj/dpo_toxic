@@ -7,3 +7,6 @@ beta: 0.1
 
 # if true, use a uniform (maximum entropy) reference model
 reference_free: false
+
+# added while catching bugs
+kl_gamma: 0

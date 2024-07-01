@@ -62,6 +62,15 @@ def prompts_to_tokens(model, prompts_path):
     tokens = model.to_tokens(prompts, prepend_bos=True)
 
     return tokens
+
+def load_model_with_device(model_name, weights_path=None, device="cpu"):
+    # Load and configure model.
+    model = load_hooked(model_name, weights_path, device=device)
+    model.tokenizer.padding_side = "left"
+    model.tokenizer.pad_token_id = model.tokenizer.eos_token_id
+    model.cfg.device = device
+
+    return model
     all_dpo_prob = None
     for idx in tqdm(range(0, tokens.shape[0], batchsize)):
         batch = tokens[idx : idx + batchsize].cuda()

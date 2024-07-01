@@ -76,14 +76,19 @@ def load_model_with_device(model_name, weights_path=None, device="cpu"):
     model.cfg.device = device
 
     return model
-    all_dpo_prob = None
-    for idx in tqdm(range(0, tokens.shape[0], batchsize)):
-        batch = tokens[idx : idx + batchsize].cuda()
 
+
+if __name__ == "__main__":
+    model = load_model_with_device("gpt2-medium", DPO_DIR, DEVICE)
+    tokens = prompts_to_tokens(model, PROMPT_PATH)
+
+    all_dpo_prob = None
+    for idx in tqdm(range(0, tokens.shape[0], BATCHSIZE)):
+        batch = tokens[idx : idx + BATCHSIZE].to(DEVICE)
         # TODO: not just one layer
-        shit_probs = get_token_prob_for_layer(model, batch, 7510, layer=0)
+        shit_probs = get_token_prob_for_layer(model, batch, TOKEN_ID, layer=0, verbose=True)
+
         if all_dpo_prob is None:
             all_dpo_prob = shit_probs
         else:
             all_dpo_prob = torch.concat([all_dpo_prob, shit_probs], dim=1)
-    print(f"all_dpo_prob: {all_dpo_prob.shape}")

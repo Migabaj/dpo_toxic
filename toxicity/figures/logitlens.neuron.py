@@ -25,7 +25,7 @@ DEVICE = "cuda"
 TOKEN_ID = 7510 # "shit" token
 
 
-def get_token_prob_for_layer(model, batch, token_id, layer=0):
+def get_token_prob_for_layer(model, batch, token_id, layer=0, device=None, verbose=0):
     """
     Get all neuron probabilities in a layer for a list of instances and a certain token.
 
@@ -33,16 +33,20 @@ def get_token_prob_for_layer(model, batch, token_id, layer=0):
     :param batch torch.tensor: The tokens
     :param token_id int: The index of the token for which the probability is calculated
     :param layer int: Layer index
+    :param verbose int: Verbosity level. 0 is no printing, 1 is printing.
     :returns token_probs torch.tensor: A tensor of all probabilities of the token within the layer
     """
     with torch.inference_mode():
-        # print('CREATING CACHE')
-        _, cache = model.run_with_cache(batch)
+        if verbose > 0:
+            print('CREATING CACHE')
+        _, cache = model.run_with_cache(batch, device=device)
     
-        # print('DECOMPOSE')
+        if verbose > 0:
+            print('DECOMPOSE')
         decom = cache.get_neuron_results(layer=layer, neuron_slice=Slice(), pos_slice=Slice())
 
-        # print('PROJECTION')
+        if verbose > 0:
+            print('PROJECTION')
         # Project each layer and each position onto vocab space
         vocab_proj = einsum(
             "batch pos neuron d_model, d_model d_vocab --> neuron batch pos d_vocab",
@@ -50,7 +54,8 @@ def get_token_prob_for_layer(model, batch, token_id, layer=0):
             model.W_U,
         )
     
-    # print('PROBS')
+    if verbose > 0:
+        print('PROBS')
     token_probs = vocab_proj.softmax(dim=-1)[:, :, -1, token_id]
 
     return token_probs

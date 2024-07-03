@@ -118,6 +118,24 @@ def get_neuron_prob_means(neuron_tensor):
     """
     return neuron_tensor.mean(axis=1)
 
+def plot_prob_means_2d(prob_means, fig_path):
+    """
+    Plot probability means for each neuron in one layer.
+
+    :param prob_means torch.tensor: Mean probabilities.
+    :param fig_path str: Path of the output figure.
+    """
+    fig, ax = plt.subplots()
+
+    neuron_indices = torch.arange(len(prob_means))
+    
+    ax.bar(neuron_indices, prob_means)
+
+    ax.set_ylabel("Probability")
+    ax.set_title("Probability of 'shit' by Neuron")
+
+    plt.savefig(fig_path)
+
 if __name__ == "__main__":
     model = load_model_with_device("gpt2-medium", DPO_DIR, DEVICE)
     tokens = prompts_to_tokens(model, PROMPT_PATH)

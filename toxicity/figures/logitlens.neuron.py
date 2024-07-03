@@ -90,6 +90,24 @@ def load_model_with_device(model_name, weights_path=None, device="cpu"):
 
     return model
 
+def neuron_tensor_to_data(neuron_tensor):
+    """
+    Transform a tensor with neuron probability data to a dataframe.
+
+    :param neuron_tensor torch.tensor: Initial tensor.
+    :return data pandas.Dataframe: Dataframe.
+    """
+    data = []
+    for neuron_idx in range(neuron_tensor.shape[0]):
+        for prob in neuron_tensor[neuron_idx]:
+            data.append(
+                {
+                    "Neuron": neuron_idx,
+                    "Probability": prob.item()
+                }
+            )
+    data = pd.DataFrame(data)
+    return data
 
 if __name__ == "__main__":
     model = load_model_with_device("gpt2-medium", DPO_DIR, DEVICE)

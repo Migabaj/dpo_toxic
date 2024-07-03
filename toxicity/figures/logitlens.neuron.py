@@ -109,6 +109,15 @@ def neuron_tensor_to_data(neuron_tensor):
     data = pd.DataFrame(data)
     return data
 
+def get_neuron_prob_means(neuron_tensor):
+    """
+    Get mean probability for every neuron.
+
+    :param neuron_tensor torch.tensor: Initial tensor.
+    :return torch.tensor: Tensor with probability means.
+    """
+    return neuron_tensor.mean(axis=1)
+
 if __name__ == "__main__":
     model = load_model_with_device("gpt2-medium", DPO_DIR, DEVICE)
     tokens = prompts_to_tokens(model, PROMPT_PATH)

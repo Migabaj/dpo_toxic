@@ -14,7 +14,7 @@ import seaborn as sns
 from fancy_einsum import einsum
 from transformer_lens import HookedTransformer
 from toxicity.figures.fig_utils import convert, load_hooked
-from constants import ROOT_DIR, MODEL_DIR, DEVICE
+from constants import ROOT_DIR, MODEL_DIR
 
 from transformer_lens.utils import Slice
 
